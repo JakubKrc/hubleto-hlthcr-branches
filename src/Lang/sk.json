@@ -44,7 +44,9 @@
         "Work category": "Kategória práce",
         "Add job position": "Pridať pracovnú pozíciu",
         "Own exam interval": "Vlastný interval LPP",
-        "Leave empty to use the shortest interval of the job hazards.": "Ak je prázdne, použije sa najkratší interval rizík pracovnej pozície."
+        "Leave empty to use the shortest interval of the job hazards.": "Ak je prázdne, použije sa najkratší interval rizík pracovnej pozície.",
+        "The exam interval cannot be negative.": "Interval prehliadok nemôže byť záporný.",
+        "The branch already has a job position of this name.": "Prevádzka už má pracovnú pozíciu s týmto názvom."
     },
     "Models\\JobHasHazard": {
         "Job position": "Pracovná pozícia",
@@ -130,7 +132,8 @@
     },
     "Models\\BranchType": {
         "Name": "Názov",
-        "Add branch type": "Pridať typ prevádzky"
+        "Add branch type": "Pridať typ prevádzky",
+        "Active": "Aktívny"
     },
     "Controllers\\Settings": {
         "Branches": "Prevádzky",

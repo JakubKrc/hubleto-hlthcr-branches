@@ -8,6 +8,7 @@ use Hubleto\Framework\Db\Column\Integer;
 use Hubleto\Framework\Db\Column\Lookup;
 use Hubleto\Framework\Db\Column\Varchar;
 use Hubleto\Framework\Db\Column\Virtual;
+use Hubleto\Framework\Exceptions\RecordSaveException;
 
 /**
  * Job position at a branch. Its hazard levels decide the work category and the medical exam obligations.
@@ -18,7 +19,9 @@ class Job extends \Hubleto\App\External\WaiBlue\HlthcrCore\Models\HlthcrModel
 
   public string $table = 'hlthcr_jobs';
   public string $recordManagerClass = RecordManagers\Job::class;
-  public ?string $lookupSqlValue = '{%TABLE%}.name';
+  // With the branch, because every branch has jobs of the same names (review C1).
+  public ?string $lookupSqlValue = 'concat({%TABLE%}.name,
+    ifnull(concat(" - ", (select name from hlthcr_branches where hlthcr_branches.id = {%TABLE%}.id_branch)), ""))';
   public ?string $lookupUrlDetail = 'hlthcr-branches/jobs/{%ID%}';
 
   public array $relations = [
@@ -53,11 +56,40 @@ class Job extends \Hubleto\App\External\WaiBlue\HlthcrCore\Models\HlthcrModel
     ]);
   }
 
+  public function onBeforeCreate(array $record): array
+  {
+    $record = parent::onBeforeCreate($record);
+    $this->refuseInvalidJob($record);
+    return $record;
+  }
+
   // The branch stays as created (one legacy app), so the job's employees and hazards stay at their branch.
   public function onBeforeUpdate(array $record): array
   {
     $record = parent::onBeforeUpdate($record);
-    return $this->keepStoredValues($record, ['id_branch']);
+    $record = $this->keepStoredValues($record, ['id_branch']);
+    $record = $this->addStoredValuesOfMissingColumns($record, ['name']);
+    $this->refuseInvalidJob($record);
+    return $record;
+  }
+
+  // Job names are unique per branch, so the job dropdown can tell them apart (review C5).
+  private function refuseInvalidJob(array $record): void
+  {
+    $interval = $record['exam_interval_months'] ?? null;
+    if (is_numeric($interval) && (int) $interval < 0) {
+      throw new RecordSaveException($this->translate('The exam interval cannot be negative.'));
+    }
+
+    $sameJobExists = $this->record
+      ->where('id_branch', (int) ($record['id_branch'] ?? 0))
+      ->where('name', trim((string) ($record['name'] ?? '')))
+      ->where('id', '<>', (int) ($record['id'] ?? 0))
+      ->exists()
+    ;
+    if ($sameJobExists) {
+      throw new RecordSaveException($this->translate('The branch already has a job position of this name.'));
+    }
   }
 
   public function describeTable(): \Hubleto\Framework\Description\Table

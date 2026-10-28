@@ -22,7 +22,9 @@ class Branch extends \Hubleto\App\External\WaiBlue\HlthcrCore\Models\HlthcrModel
   use UsesStoredValues;
   public string $table = 'hlthcr_branches';
   public string $recordManagerClass = RecordManagers\Branch::class;
-  public ?string $lookupSqlValue = 'concat({%TABLE%}.name, ifnull(concat(", ", {%TABLE%}.city), ""))';
+  // With the client, because branch names are unique only per client (review C1).
+  public ?string $lookupSqlValue = 'concat({%TABLE%}.name, ifnull(concat(", ", {%TABLE%}.city), ""),
+    ifnull(concat(" - ", (select name from customers where customers.id = {%TABLE%}.id_customer)), ""))';
   public ?string $lookupUrlDetail = 'hlthcr-branches/branches/{%ID%}';
 
   public array $relations = [
