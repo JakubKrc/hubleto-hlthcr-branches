@@ -172,7 +172,7 @@ class Loader extends \Hubleto\App\External\WaiBlue\HlthcrCore\HlthcrApp
     return 0;
   }
 
-  public function generateDemoData(): void
+  public function generateHlthcrDemoData(): void
   {
     /** @var Customer */
     $mCustomer = $this->getModel(Customer::class);
