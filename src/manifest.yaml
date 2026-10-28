@@ -1,0 +1,14 @@
+namespace: Hubleto\App\External\WaiBlue\HlthcrBranches
+appType: external
+sidebarGroup: custom
+rootUrlSlug: hlthcr-branches
+name: Branches
+icon: fas fa-industry
+author:
+  name: "Hlthcr"
+  nick: "hlthcr"
+highlight: Client branches, workplace hazards, job positions with hazard levels (categorisation of work) and deficiencies.
+requires:
+  - Hubleto\App\Community\Customers
+  - Hubleto\App\Community\Workflow
+  - Hubleto\App\External\WaiBlue\HlthcrCore

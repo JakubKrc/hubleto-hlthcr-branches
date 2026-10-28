@@ -1,0 +1,19 @@
+<div class="flex items-center">
+  <h1 class="app-main-title">{{ translate('Branches') }} > {{ translate('Settings') }}</h1>
+</div>
+
+<div class="card mt-10 w-1/2 m-auto">
+  <div class="card-body">
+    <p class="mb-4">{{ translate('Branch types are a code list for your own classification of branches. Deficiency states are a Hubleto workflow.') }}</p>
+    <div class="flex gap-2 flex-wrap">
+      <a href="{{ config.projectUrl }}/hlthcr-branches/branch-types" class="btn btn-transparent">
+        <span class="icon"><i class="fas fa-tags"></i></span>
+        <span class="text">{{ translate('Branch types') }}</span>
+      </a>
+      <a href="{{ config.projectUrl }}/workflow/workflows" class="btn btn-transparent">
+        <span class="icon"><i class="fas fa-timeline"></i></span>
+        <span class="text">{{ translate('Deficiency states') }}</span>
+      </a>
+    </div>
+  </div>
+</div>

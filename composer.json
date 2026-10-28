@@ -1,0 +1,14 @@
+{
+    "name": "wai-blue/hubleto-hlthcr-branches",
+    "license": "MIT",
+    "description": "Hlthcr for Hubleto: Branches of the clients, job positions with hazard categories, categorisation of work, deficiencies",
+    "require": {
+        "wai-blue/hubleto-hlthcr-core": "dev-main"
+    },
+    "autoload": {
+        "psr-4": {
+            "Hubleto\\App\\External\\WaiBlue\\HlthcrBranches\\": "src"
+        }
+    },
+    "minimum-stability": "dev"
+}

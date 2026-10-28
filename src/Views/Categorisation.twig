@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+  <meta charset="utf-8">
+  <title>{{ translate('Categorisation of work') }}{% if viewParams.matrix %} - {{ viewParams.matrix.branch.name }}{% endif %}</title>
+  <style>
+    body { font-family: Arial, Helvetica, sans-serif; font-size: 11px; color: #111; margin: 16px; }
+    h1 { font-size: 16px; margin: 0 0 4px 0; }
+    .meta { color: #555; margin-bottom: 12px; }
+    .print-button { margin-bottom: 12px; padding: 4px 12px; cursor: pointer; }
+    table { border-collapse: collapse; }
+    th, td { border: 1px solid #333; padding: 2px 4px; text-align: center; }
+    th.job-name, td.job-name { text-align: left; white-space: nowrap; }
+    th.vertical { height: 220px; vertical-align: bottom; white-space: nowrap; font-weight: normal; }
+    th.vertical div { writing-mode: vertical-rl; transform: rotate(180deg); max-height: 210px; overflow: hidden; }
+    td.level-3 { background: #92d050; }
+    td.level-4 { background: #ff5733; }
+    .empty { color: #555; font-style: italic; }
+    @media print { .print-button { display: none; } body { margin: 0; } }
+  </style>
+</head>
+<body>
+  {% set matrix = viewParams.matrix %}
+  {% set printedOn = viewParams.printedOn %}
+  {% if not matrix %}
+    <p class="empty">{{ translate('Branch not found.') }}</p>
+  {% else %}
+    <button class="print-button" onclick="window.print()">{{ translate('Print') }}</button>
+    <h1>{{ translate('Categorisation of work') }}: {{ matrix.branch.name }}{% if matrix.branch.city %}, {{ matrix.branch.city }}{% endif %}</h1>
+    <div class="meta">{{ translate('Printed on') }} {{ printedOn }}</div>
+
+    {% if matrix.jobs is empty %}
+      <p class="empty">{{ translate('The branch has no job positions yet.') }}</p>
+    {% else %}
+      <table>
+        <thead>
+          <tr>
+            <th rowspan="2" class="job-name">{{ translate('Job position') }}</th>
+            {% for hazardType in matrix.hazardTypes %}
+              <th colspan="{{ hazardType.hazards|length }}">{{ hazardType.name }}</th>
+            {% endfor %}
+            <th rowspan="2" class="vertical"><div>{{ translate('Own exam interval (months)') }}</div></th>
+            <th rowspan="2" class="vertical"><div>{{ translate('Work category') }}</div></th>
+          </tr>
+          <tr>
+            {% for hazardType in matrix.hazardTypes %}
+              {% for hazard in hazardType.hazards %}
+                <th class="vertical"><div>{{ hazard.name }}</div></th>
+              {% endfor %}
+            {% endfor %}
+          </tr>
+        </thead>
+        <tbody>
+          {% for job in matrix.jobs %}
+            <tr>
+              <td class="job-name">{{ job.name }}</td>
+              {% for cell in job.cells %}
+                <td class="{{ cell.highlight }}">{{ cell.text }}</td>
+              {% endfor %}
+              <td>{{ job.exam_interval_months }}</td>
+              <td>{{ job.work_category }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% endif %}
+  {% endif %}
+</body>
+</html>

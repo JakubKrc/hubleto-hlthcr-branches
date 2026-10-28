@@ -1,0 +1,143 @@
+{
+    "manifest": {
+        "Branches": "Prevádzky",
+        "Client branches, workplace hazards, job positions with hazard levels (categorisation of work) and deficiencies.": "Prevádzky klientov, pracovné prostredie, pracovné pozície s kategóriami rizík (kategorizácia prác) a nedostatky.",
+        "Job positions": "Pracovné pozície",
+        "Deficiencies": "Nedostatky",
+        "Newly found": "Novo zistené",
+        "Being resolved": "V štádiu riešenia",
+        "Missing first aid kit in the warehouse.": "V sklade chýba lekárnička prvej pomoci.",
+        "Place a complete first aid kit next to the entrance.": "Umiestniť kompletnú lekárničku pri vchode.",
+        "Job position": "Pracovná pozícia",
+        "Branch types": "Typy prevádzok",
+        "Resolved": "Vyriešený",
+        "Settings": "Nastavenia",
+        "Escape routes are not marked.": "Únikové cesty nie sú označené.",
+        "Signs are ordered.": "Značky sú objednané."
+    },
+    "Models\\Branch": {
+        "Branch": "Prevádzka",
+        "Client": "Klient",
+        "Street": "Ulica",
+        "City": "Mesto",
+        "Postal code": "PSČ",
+        "Hygienist": "Hygienik",
+        "First aid training is valid": "Je platné školenie 1. pomoci",
+        "First aid validity last changed on": "Dátum poslednej zmeny platnosti školenia",
+        "Note": "Poznámka",
+        "Nurse notes": "Poznámky zdravotnej sestry",
+        "Active": "Aktívna",
+        "Inactive": "Neaktívna",
+        "Add branch": "Pridať prevádzku",
+        "Branch type": "Typ prevádzky",
+        "Contact e-mail": "Kontaktný e-mail"
+    },
+    "Models\\BranchHasHazard": {
+        "Branch": "Prevádzka",
+        "Hazard": "Položka vo výslednej kategorizácii",
+        "Add hazard": "Pridať riziko"
+    },
+    "Models\\Job": {
+        "Job position": "Pracovná pozícia",
+        "Branch": "Prevádzka",
+        "months": "mesiacov",
+        "Work category": "Kategória práce",
+        "Add job position": "Pridať pracovnú pozíciu",
+        "Own exam interval": "Vlastný interval LPP",
+        "Leave empty to use the shortest interval of the job hazards.": "Ak je prázdne, použije sa najkratší interval rizík pracovnej pozície."
+    },
+    "Models\\JobHasHazard": {
+        "Job position": "Pracovná pozícia",
+        "Hazard": "Riziko",
+        "Category": "Kategória",
+        "Category not set": "Kategória nie je zadaná",
+        "Category 1": "Kategória 1",
+        "Category 2": "Kategória 2",
+        "Category 3": "Kategória 3",
+        "Category 4": "Kategória 4",
+        "Add hazard level": "Pridať kategóriu rizika"
+    },
+    "Models\\BranchHasClinic": {
+        "Branch": "Prevádzka",
+        "Clinic": "Ambulancia",
+        "Add clinic": "Pridať ambulanciu"
+    },
+    "Models\\Deficiency": {
+        "Branch": "Prevádzka",
+        "Deficiency": "Typ nedostatku",
+        "Workflow": "Workflow",
+        "Status": "Splnenie",
+        "Add deficiency": "Pridať nedostatok",
+        "Note": "Poznámka"
+    },
+    "Controllers\\Home": {
+        "Branches": "Prevádzky",
+        "Job positions": "Pracovné pozície",
+        "Deficiencies": "Nedostatky"
+    },
+    "Controllers\\Categorisation": {
+        "Categorisation of work": "Kategorizácia prác",
+        "Branch not found.": "Prevádzka neexistuje alebo k nej nemáte prístup.",
+        "Print": "Tlačiť",
+        "Printed on": "Vytlačené",
+        "The branch has no job positions yet.": "Prevádzka zatiaľ nemá pracovné pozície.",
+        "Job position": "Pracovná pozícia",
+        "Work category": "Kategória práce",
+        "Own exam interval (months)": "Vlastný interval LPP (mesiace)"
+    },
+    "Components\\FormBranch": {
+        "Branch": "Prevádzka",
+        "Save the branch first.": "Najprv uložte prevádzku.",
+        "Job positions": "Pracovné pozície",
+        "Clinics": "Ambulancie",
+        "Deficiencies": "Nedostatky",
+        "Categorisation of work": "Kategorizácia prác"
+    },
+    "Components\\FormJob": {
+        "Job position": "Pracovná pozícia",
+        "Save the job position first.": "Najprv uložte pracovnú pozíciu.",
+        "Hazard levels": "Pracovné prostredie"
+    },
+    "Components\\FormBranchHasClinic": {
+        "Branch clinic": "Ambulancia prevádzky"
+    },
+    "Components\\FormJobHasHazard": {
+        "Hazard level": "Kategória rizika"
+    },
+    "Components\\FormDeficiency": {
+        "Deficiency": "Nedostatok"
+    },
+    "Components\\CategorisationTab": {
+        "Open for printing": "Otvoriť na tlač"
+    },
+    "Components\\JobHazardLevelsEditor": {
+        "Hazard levels saved.": "Kategórie rizík boli uložené.",
+        "Saving failed.": "Uloženie zlyhalo.",
+        "Category not set": "Kategória nie je zadaná",
+        "Category": "Kategória",
+        "Loading...": "Načítavam...",
+        "Save hazard levels": "Uložiť kategórie rizík"
+    },
+    "Loader": {
+        "Branches": "Prevádzky",
+        "Save the client first.": "Najprv uložte klienta."
+    },
+    "Components\\BranchHazardsEditor": {
+        "Saving failed.": "Uloženie zlyhalo.",
+        "Loading...": "Načítavam..."
+    },
+    "Models\\BranchType": {
+        "Name": "Názov",
+        "Add branch type": "Pridať typ prevádzky"
+    },
+    "Controllers\\Settings": {
+        "Branches": "Prevádzky",
+        "Settings": "Nastavenia",
+        "Branch types": "Typy prevádzok",
+        "Deficiency states": "Stavy nedostatkov",
+        "Branch types are a code list for your own classification of branches. Deficiency states are a Hubleto workflow.": "Typy prevádzok sú číselník na vlastné triedenie prevádzok. Stavy nedostatkov sú workflow v Hubleto."
+    },
+    "Components\\FormBranchType": {
+        "Branch type": "Typ prevádzky"
+    }
+}
