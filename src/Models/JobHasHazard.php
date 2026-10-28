@@ -3,20 +3,23 @@
 namespace Hubleto\App\External\WaiBlue\HlthcrBranches\Models;
 
 use Hubleto\App\External\WaiBlue\HlthcrCore\Models\Hazard;
+use Hubleto\App\External\WaiBlue\HlthcrCore\Models\Traits\HasHazardLevel;
 use Hubleto\Framework\Db\Column\Integer;
 use Hubleto\Framework\Db\Column\Lookup;
 
 /**
  * Level of one catalogue hazard for one job position (one legacy app links them so; the other went through branch hazards).
- * For hazard types with "Category 1 - 4" the level is 0-4; for "Yes / no" types it is 0 or 1.
+ * A row means the hazard is present: category 1-4 for work factors, 1 ("yes") for the other types.
  */
 class JobHasHazard extends \Hubleto\App\External\WaiBlue\HlthcrCore\Models\HlthcrModel
 {
+  use HasHazardLevel;
+
+  // Used by the hazard levels editor for a hazard without a row.
   const LEVEL_NOT_SET = 0;
   const LEVEL_YES = 1;
   const CATEGORY_RISKY = 3;
   const CATEGORY_HIGHEST_RISK = 4;
-  const HIGHEST_LEVEL = 4;
 
   public string $table = 'hlthcr_job_has_hazards';
   public string $recordManagerClass = RecordManagers\JobHasHazard::class;
@@ -40,10 +43,10 @@ class JobHasHazard extends \Hubleto\App\External\WaiBlue\HlthcrCore\Models\Hlthc
         ->setDefaultVisible()
       ,
       'level' => (new Integer($this, $this->translate('Category')))
+        ->setRequired()
         ->setDefaultVisible()
-        ->setDefaultValue(self::LEVEL_NOT_SET)
+        ->setDefaultValue(Hazard::LEVEL_YES)
         ->setEnumValues([
-          self::LEVEL_NOT_SET => $this->translate('Category not set'),
           1 => $this->translate('Category 1'),
           2 => $this->translate('Category 2'),
           3 => $this->translate('Category 3'),
@@ -51,6 +54,20 @@ class JobHasHazard extends \Hubleto\App\External\WaiBlue\HlthcrCore\Models\Hlthc
         ])
       ,
     ]);
+  }
+
+  public function onBeforeCreate(array $record): array
+  {
+    $record = parent::onBeforeCreate($record);
+    $this->refuseInvalidHazardLevel($record);
+    return $record;
+  }
+
+  public function onBeforeUpdate(array $record): array
+  {
+    $record = parent::onBeforeUpdate($record);
+    $this->refuseInvalidHazardLevel($record);
+    return $record;
   }
 
   public function describeTable(): \Hubleto\Framework\Description\Table

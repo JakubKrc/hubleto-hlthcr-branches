@@ -55,7 +55,8 @@
         "Category 2": "Kategória 2",
         "Category 3": "Kategória 3",
         "Category 4": "Kategória 4",
-        "Add hazard level": "Pridať kategóriu rizika"
+        "Add hazard level": "Pridať kategóriu rizika",
+        "A work factor needs a category 1 to 4, other hazards only \"yes\" (1).": "Faktor práce potrebuje kategóriu 1 až 4, ostatné riziká len „áno“ (1)."
     },
     "Models\\BranchHasClinic": {
         "Branch": "Prevádzka",

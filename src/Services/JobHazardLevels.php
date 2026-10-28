@@ -67,16 +67,14 @@ class JobHazardLevels extends \Hubleto\Erp\Core
     $mJobHazard = $this->getModel(JobHasHazard::class);
     /** @var Hazard */
     $mHazard = $this->getModel(Hazard::class);
-    $catalogueHazardIds = $mHazard->record->pluck('id')->toArray();
+    $hazardTypesById = $mHazard->record->pluck('type', 'id')->toArray();
 
-    foreach ($levelsByHazard as $idHazard => $level) {
+    foreach ($levelsByHazard as $idHazard => $submittedLevel) {
       $idHazard = (int) $idHazard;
-      $level = (int) $level;
-      if ($level < JobHasHazard::LEVEL_NOT_SET) $level = JobHasHazard::LEVEL_NOT_SET;
-      if ($level > JobHasHazard::HIGHEST_LEVEL) $level = JobHasHazard::HIGHEST_LEVEL;
-
-      $isCatalogueHazard = in_array($idHazard, $catalogueHazardIds);
+      $isCatalogueHazard = isset($hazardTypesById[$idHazard]);
       if (!$isCatalogueHazard) continue;
+
+      $level = Hazard::levelToStore((int) $hazardTypesById[$idHazard], (int) $submittedLevel);
 
       $existingJobHazard = $mJobHazard->record
         ->where('id_job', $idJob)
