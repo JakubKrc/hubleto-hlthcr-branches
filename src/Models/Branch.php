@@ -2,7 +2,9 @@
 
 namespace Hubleto\App\External\WaiBlue\HlthcrBranches\Models;
 
+use Hubleto\App\External\WaiBlue\HlthcrCore\Controllers\Api\UserLookup;
 use Hubleto\App\External\WaiBlue\HlthcrCore\Models\Traits\EmptyDatesAsNull;
+use Hubleto\App\External\WaiBlue\HlthcrCore\Models\Traits\UsesStoredValues;
 use Hubleto\App\Community\Auth\Models\User;
 use Hubleto\App\Community\Customers\Models\Customer;
 use Hubleto\App\External\WaiBlue\HlthcrCore\Controllers\Api\CustomerLookup;
@@ -17,6 +19,7 @@ use Hubleto\Framework\Db\Column\Varchar;
 class Branch extends \Hubleto\App\External\WaiBlue\HlthcrCore\Models\HlthcrModel
 {
   use EmptyDatesAsNull;
+  use UsesStoredValues;
   public string $table = 'hlthcr_branches';
   public string $recordManagerClass = RecordManagers\Branch::class;
   public ?string $lookupSqlValue = 'concat({%TABLE%}.name, ifnull(concat(", ", {%TABLE%}.city), ""))';
@@ -48,7 +51,7 @@ class Branch extends \Hubleto\App\External\WaiBlue\HlthcrCore\Models\HlthcrModel
       // Left empty, it is the client's hygienist.
       'id_owner' => (new Lookup($this, $this->translate('Hygienist'), User::class))
         ->setDefaultVisible()
-        ->setReactComponent('InputUserSelect')
+        ->setEndpoint(UserLookup::endpointFor(Roles::HYGIENIST, 'id_owner'))
       ,
       'has_valid_first_aid_training' => (new Boolean($this, $this->translate('First aid training is valid')))
         ->setDefaultValue(false)
@@ -124,6 +127,8 @@ class Branch extends \Hubleto\App\External\WaiBlue\HlthcrCore\Models\HlthcrModel
   {
     $record = parent::onBeforeUpdate($record);
     $record = $this->emptyDatesAsNull($record);
+    // The client stays as created (one legacy app), so the branch's documents and history stay with it.
+    $record = $this->keepStoredValues($record, ['id_customer']);
 
     // Nurse notes are for nurses only (both legacy apps); others do not get them, so they must not overwrite them.
     if (!$this->activeUserIsNurse()) unset($record['nurse_notes']);

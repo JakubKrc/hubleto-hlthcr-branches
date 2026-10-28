@@ -13,13 +13,15 @@ const parentApp = 'Hubleto/App/External/WaiBlue/HlthcrBranches';
 const T = new Translator(parentApp + '/Loader', 'Components/' + componentName);
 
 // Both legacy apps show the nurse notes to nurses only (the server sends them only to nurses).
+// The client stays as created (the server keeps it), so it is read-only after saving.
 const TabDefault = () => {
   const form = React.useContext(FormMetaContext);
   const showNurseNotes = Boolean(form.description?.ui?.showNurseNotes);
+  const isSaved = form.id > 0;
   return <div className='grid grid-cols-1 md:grid-cols-2 gap-2'>
   <div>
     <Input field='name' />
-    <Input field='id_customer' />
+    <Input field='id_customer' readonly={isSaved} />
     <Input field='street' />
     <Input field='city' />
     <Input field='postal_code' />

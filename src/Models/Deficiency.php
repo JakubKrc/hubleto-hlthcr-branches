@@ -5,6 +5,7 @@ namespace Hubleto\App\External\WaiBlue\HlthcrBranches\Models;
 use Hubleto\App\Community\Workflow\Models\Workflow;
 use Hubleto\App\Community\Workflow\Models\WorkflowStep;
 use Hubleto\App\External\WaiBlue\HlthcrCore\Models\Traits\StaysInOwnWorkflow;
+use Hubleto\App\External\WaiBlue\HlthcrCore\Models\Traits\UsesStoredValues;
 use Hubleto\Framework\Db\Column\Lookup;
 use Hubleto\Framework\Db\Column\Text;
 
@@ -15,6 +16,7 @@ use Hubleto\Framework\Db\Column\Text;
 class Deficiency extends \Hubleto\App\External\WaiBlue\HlthcrCore\Models\HlthcrModel
 {
   use StaysInOwnWorkflow;
+  use UsesStoredValues;
 
   const WORKFLOW_GROUP = 'hlthcr_deficiencies';
 
@@ -68,6 +70,8 @@ class Deficiency extends \Hubleto\App\External\WaiBlue\HlthcrCore\Models\HlthcrM
   public function onBeforeUpdate(array $record): array
   {
     $record = parent::onBeforeUpdate($record);
+    // The branch stays as created (both legacy apps).
+    $record = $this->keepStoredValues($record, ['id_branch']);
     $this->refuseWorkflowOfOtherGroup($record, self::WORKFLOW_GROUP);
     return $record;
   }

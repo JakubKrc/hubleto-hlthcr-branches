@@ -15,6 +15,17 @@ const TabHazardLevels = () => {
   return <JobHazardLevelsEditor idJob={form.id} />;
 }
 
+// The branch stays as created (the server keeps it), so it is read-only after saving.
+const TabDefault = () => {
+  const form = React.useContext(FormMetaContext);
+  const isSaved = form.id > 0;
+  return <div className='grid grid-cols-1 md:grid-cols-2 gap-2'>
+    <Input field='name' />
+    <Input field='id_branch' readonly={isSaved} />
+    <Input field='exam_interval_months' />
+  </div>;
+}
+
 const FormJob = (props: FormProps) => <Form
   componentName={componentName}
   parentApp={parentApp}
@@ -22,11 +33,7 @@ const FormJob = (props: FormProps) => <Form
   urlSlug='hlthcr-branches/jobs'
   title={{field: 'name', sub: T.translate('Job position')}}
   tabs={{
-    default: {title: <b>{T.translate('Job position')}</b>, content: () => <div className='grid grid-cols-1 md:grid-cols-2 gap-2'>
-      <Input field='name' />
-      <Input field='id_branch' />
-      <Input field='exam_interval_months' />
-    </div>},
+    default: {title: <b>{T.translate('Job position')}</b>, content: () => <TabDefault />},
     hazardLevels: {title: T.translate('Hazard levels'), content: () => <TabHazardLevels />},
   }}
   {...props}

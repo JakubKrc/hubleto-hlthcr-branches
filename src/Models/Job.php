@@ -2,6 +2,7 @@
 
 namespace Hubleto\App\External\WaiBlue\HlthcrBranches\Models;
 
+use Hubleto\App\External\WaiBlue\HlthcrCore\Models\Traits\UsesStoredValues;
 use Hubleto\App\External\WaiBlue\HlthcrCore\Models\Hazard;
 use Hubleto\Framework\Db\Column\Integer;
 use Hubleto\Framework\Db\Column\Lookup;
@@ -13,6 +14,8 @@ use Hubleto\Framework\Db\Column\Virtual;
  */
 class Job extends \Hubleto\App\External\WaiBlue\HlthcrCore\Models\HlthcrModel
 {
+  use UsesStoredValues;
+
   public string $table = 'hlthcr_jobs';
   public string $recordManagerClass = RecordManagers\Job::class;
   public ?string $lookupSqlValue = '{%TABLE%}.name';
@@ -48,6 +51,13 @@ class Job extends \Hubleto\App\External\WaiBlue\HlthcrCore\Models\HlthcrModel
         ->setProperty('sql', self::getWorkCategorySql('hlthcr_jobs.id'))
       ,
     ]);
+  }
+
+  // The branch stays as created (one legacy app), so the job's employees and hazards stay at their branch.
+  public function onBeforeUpdate(array $record): array
+  {
+    $record = parent::onBeforeUpdate($record);
+    return $this->keepStoredValues($record, ['id_branch']);
   }
 
   public function describeTable(): \Hubleto\Framework\Description\Table
