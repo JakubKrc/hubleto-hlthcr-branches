@@ -18,7 +18,7 @@ class BranchScope extends \Hubleto\Erp\Core
     if ($visibility == AccessScope::SEES_ALL) return $query;
     if ($visibility == AccessScope::SEES_NOTHING) return $query->whereRaw('1 = 0');
 
-    // Branches have no manager column, so managers too see only owned branches (as Hubleto's base RecordManager).
+    // Hygienists and other users who see only their own: the branches they own.
     $idUser = $this->authProvider()->getUserId();
 
     return $query->whereIn($branchIdColumn, function ($visibleBranches) use ($idUser) {
