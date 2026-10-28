@@ -10,9 +10,13 @@ class GetJobHazardLevels extends \Hubleto\Erp\Controllers\ApiController
   {
     $idJob = $this->router()->urlParamAsInteger('idJob');
 
+    /** @var JobHazardLevels */
+    $jobHazardLevels = $this->getService(JobHazardLevels::class);
+
     return [
       'status' => 'success',
-      'hazardTypes' => $this->getService(JobHazardLevels::class)->getLevelsGroupedByHazardType($idJob),
+      'hazardTypes' => $jobHazardLevels->getLevelsGroupedByHazardType($idJob),
+      'mayChange' => $jobHazardLevels->mayActiveUserChangeLevels(),
     ];
   }
 }

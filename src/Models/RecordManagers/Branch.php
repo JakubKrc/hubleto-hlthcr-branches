@@ -4,12 +4,15 @@ namespace Hubleto\App\External\WaiBlue\HlthcrBranches\Models\RecordManagers;
 
 use Hubleto\App\Community\Auth\Models\RecordManagers\User;
 use Hubleto\App\Community\Customers\Models\RecordManagers\Customer;
+use Hubleto\App\External\WaiBlue\HlthcrCore\Models\RecordManagers\Traits\OffersActiveRecords;
 use Hubleto\App\External\WaiBlue\HlthcrBranches\Services\BranchScope;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Branch extends \Hubleto\Erp\RecordManager
 {
+  use OffersActiveRecords;
+
   public $table = 'hlthcr_branches';
 
   // Options of the status filter in the table (URL filters[STATUS_FILTER]=<option>).
@@ -37,21 +40,20 @@ class Branch extends \Hubleto\Erp\RecordManager
     return $this->hasMany(Job::class, 'id_branch', 'id');
   }
 
-  // Owner-based visibility (hygienist sees own branches) is applied by the parent, because the table has id_owner.
+  // The same rule as for jobs and everything else under a branch (BranchScope, by Hlthcr role). Hubleto's parent
+  // would limit by user type because of id_owner, so it is left out (branches have no junctions).
   public function prepareReadQuery(mixed $query = null, int $level = 0, array|null $includeRelations = null): mixed
   {
-    return parent::prepareReadQuery($query, $level, $includeRelations);
+    $query = \Hubleto\Framework\RecordManager::prepareReadQuery($query, $level, $includeRelations);
+    return $this->restrictToVisibleBranches($query);
   }
 
   public function prepareLookupQuery(string $search): mixed
   {
     $query = parent::prepareLookupQuery($search);
-
-    // Dropdowns offer active branches only, as in both legacy apps (a chosen one still shows in its form).
-    $query = $query->where($this->table . '.is_active', 1);
+    $query = $this->restrictToVisibleBranches($query);
 
     $hubleto = \Hubleto\Erp\Loader::getGlobalApp();
-    $query = $hubleto->getService(BranchScope::class)->restrictToVisibleBranches($query, $this->table . '.id');
 
     $idCustomer = $hubleto->router()->urlParamAsInteger('idCustomer');
     if ($idCustomer > 0) {
@@ -80,6 +82,20 @@ class Branch extends \Hubleto\Erp\RecordManager
     }
 
     return $query;
+  }
+
+  // Dropdowns offer active branches only, as in both legacy apps.
+  public function restrictToOfferedRecords(mixed $query): mixed
+  {
+    return $this->restrictToActiveOrChosen($query, 'id_branch');
+  }
+
+  private function restrictToVisibleBranches(mixed $query): mixed
+  {
+    $hubleto = \Hubleto\Erp\Loader::getGlobalApp();
+    /** @var BranchScope */
+    $branchScope = $hubleto->getService(BranchScope::class);
+    return $branchScope->restrictToVisibleBranches($query, $this->table . '.id');
   }
 
   public function prepareLookupData(array $dataRaw): array

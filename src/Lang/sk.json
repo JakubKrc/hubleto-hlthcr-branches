@@ -68,7 +68,8 @@
         "Workflow": "Workflow",
         "Status": "Splnenie",
         "Add deficiency": "Pridať nedostatok",
-        "Note": "Poznámka"
+        "Note": "Poznámka",
+        "Choose a state of this record's own workflow.": "Vyberte stav z vlastného workflow tohto záznamu."
     },
     "Controllers\\Home": {
         "Branches": "Prevádzky",

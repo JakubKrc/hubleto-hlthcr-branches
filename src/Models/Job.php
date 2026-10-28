@@ -35,7 +35,7 @@ class Job extends \Hubleto\App\External\WaiBlue\HlthcrCore\Models\HlthcrModel
   {
     return array_merge(parent::describeColumns(), [
       'name' => (new Varchar($this, $this->translate('Job position')))->setRequired()->setDefaultVisible(),
-      'id_branch' => (new Lookup($this, $this->translate('Branch'), Branch::class, 'CASCADE'))->setRequired()->setDefaultVisible(),
+      'id_branch' => (new Lookup($this, $this->translate('Branch'), Branch::class, 'RESTRICT'))->setRequired()->setDefaultVisible(),
       // A job may set its own exam interval; it wins over the hazard intervals (one legacy app keeps the interval on the job).
       'exam_interval_months' => (new Integer($this, $this->translate('Own exam interval')))
         ->setUnit($this->translate('months'))

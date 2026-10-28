@@ -4,6 +4,7 @@ namespace Hubleto\App\External\WaiBlue\HlthcrBranches\Models;
 
 use Hubleto\App\Community\Workflow\Models\Workflow;
 use Hubleto\App\Community\Workflow\Models\WorkflowStep;
+use Hubleto\App\External\WaiBlue\HlthcrCore\Models\Traits\StaysInOwnWorkflow;
 use Hubleto\Framework\Db\Column\Lookup;
 use Hubleto\Framework\Db\Column\Text;
 
@@ -13,6 +14,8 @@ use Hubleto\Framework\Db\Column\Text;
  */
 class Deficiency extends \Hubleto\App\External\WaiBlue\HlthcrCore\Models\HlthcrModel
 {
+  use StaysInOwnWorkflow;
+
   const WORKFLOW_GROUP = 'hlthcr_deficiencies';
 
   public string $table = 'hlthcr_deficiencies';
@@ -29,7 +32,7 @@ class Deficiency extends \Hubleto\App\External\WaiBlue\HlthcrCore\Models\HlthcrM
   public function describeColumns(): array
   {
     return array_merge(parent::describeColumns(), [
-      'id_branch' => (new Lookup($this, $this->translate('Branch'), Branch::class, 'CASCADE'))->setRequired()->setDefaultVisible(),
+      'id_branch' => (new Lookup($this, $this->translate('Branch'), Branch::class, 'RESTRICT'))->setRequired()->setDefaultVisible(),
       'description' => (new Text($this, $this->translate('Deficiency')))->setRequired()->setDefaultVisible(),
       'note' => (new Text($this, $this->translate('Note')))->setDefaultVisible(),
       'id_workflow' => (new Lookup($this, $this->translate('Workflow'), Workflow::class))->setReadonly(),
@@ -60,6 +63,13 @@ class Deficiency extends \Hubleto\App\External\WaiBlue\HlthcrCore\Models\HlthcrM
   public function getMaxReadLevelForLoadTableData(): int
   {
     return 1;
+  }
+
+  public function onBeforeUpdate(array $record): array
+  {
+    $record = parent::onBeforeUpdate($record);
+    $this->refuseWorkflowOfOtherGroup($record, self::WORKFLOW_GROUP);
+    return $record;
   }
 
   public function onAfterCreate(array $savedRecord): array
