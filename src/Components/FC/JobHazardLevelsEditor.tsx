@@ -28,7 +28,7 @@ const LEVEL_YES = 1;
 const CATEGORY_LEVELS = [LEVEL_NOT_SET, 1, 2, 3, 4];
 
 /**
- * Edits the level of every branch hazard for one job position, like the legacy job form did.
+ * Edits the level of every catalogue hazard for one job position, like the legacy job form did.
  * Category hazard types use a 0-4 select, yes/no types use a checkbox (level 1 = yes).
  */
 const JobHazardLevelsEditor = (props: JobHazardLevelsEditorProps) => {

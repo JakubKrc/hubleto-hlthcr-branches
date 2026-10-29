@@ -32,11 +32,6 @@
         "Branch type": "Typ prevádzky",
         "Contact e-mail": "Kontaktný e-mail"
     },
-    "Models\\BranchHasHazard": {
-        "Branch": "Prevádzka",
-        "Hazard": "Položka vo výslednej kategorizácii",
-        "Add hazard": "Pridať riziko"
-    },
     "Models\\Job": {
         "Job position": "Pracovná pozícia",
         "Branch": "Prevádzka",
@@ -128,10 +123,6 @@
         "Branches": "Prevádzky",
         "Save the client first.": "Najprv uložte klienta."
     },
-    "Components\\BranchHazardsEditor": {
-        "Saving failed.": "Uloženie zlyhalo.",
-        "Loading...": "Načítavam..."
-    },
     "Models\\BranchType": {
         "Name": "Názov",
         "Add branch type": "Pridať typ prevádzky",
@@ -142,7 +133,7 @@
         "Settings": "Nastavenia",
         "Branch types": "Typy prevádzok",
         "Deficiency states": "Stavy nedostatkov",
-        "Branch types are a code list for your own classification of branches. Deficiency states are a Hubleto workflow.": "Typy prevádzok sú číselník na vlastné triedenie prevádzok. Stavy nedostatkov sú workflow v Hubleto."
+        "Branch types are a code list for your own classification of branches. Deficiency states are a workflow.": "Typy prevádzok sú číselník na vlastné triedenie prevádzok. Stavy nedostatkov sú workflow."
     },
     "Components\\FormBranchType": {
         "Branch type": "Typ prevádzky"
