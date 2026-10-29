@@ -6,6 +6,7 @@ use Hubleto\App\External\WaiBlue\HlthcrCore\Models\Hazard;
 use Hubleto\App\External\WaiBlue\HlthcrCore\Models\Traits\HasHazardLevel;
 use Hubleto\Framework\Db\Column\Integer;
 use Hubleto\Framework\Db\Column\Lookup;
+use Hubleto\Framework\Db\Column\Virtual;
 
 /**
  * Level of one catalogue hazard for one job position (one legacy app links them so; the other went through branch hazards).
@@ -44,14 +45,12 @@ class JobHasHazard extends \Hubleto\App\External\WaiBlue\HlthcrCore\Models\Hlthc
       ,
       'level' => (new Integer($this, $this->translate('Category')))
         ->setRequired()
-        ->setDefaultVisible()
         ->setDefaultValue(Hazard::LEVEL_YES)
-        ->setEnumValues([
-          1 => $this->translate('Category 1'),
-          2 => $this->translate('Category 2'),
-          3 => $this->translate('Category 3'),
-          4 => $this->translate('Category 4'),
-        ])
+        ->setEnumValues($this->getLevelTexts())
+      ,
+      'virt_level' => (new Virtual($this, $this->translate('Category')))
+        ->setDefaultVisible()
+        ->setProperty('sql', $this->getLevelTextSql())
       ,
     ]);
   }

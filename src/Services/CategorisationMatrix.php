@@ -45,7 +45,8 @@ class CategorisationMatrix extends \Hubleto\Erp\Core
       $jobs[] = [
         'name' => $job->name,
         'cells' => $cells,
-        'exam_interval_months' => $job->exam_interval_months,
+        // 0 means the job has no own interval (Hubleto stores an empty number as 0), as the job list shows it.
+        'exam_interval_months' => (int) $job->exam_interval_months > 0 ? (int) $job->exam_interval_months : '',
         'work_category' => $workCategory > 0 ? $workCategory : '',
       ];
     }

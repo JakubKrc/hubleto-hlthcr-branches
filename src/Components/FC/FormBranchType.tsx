@@ -15,6 +15,7 @@ const FormBranchType = (props: FormProps) => <Form
   title={{field: 'name', sub: T.translate('Branch type')}}
   tabs={{default: {content: () => <div className='grid grid-cols-1 gap-2'>
     <Input field='name' />
+    <Input field='is_active' />
   </div>}}}
   {...props}
 />

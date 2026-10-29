@@ -6,6 +6,7 @@ use Hubleto\App\Community\Auth\Models\RecordManagers\User;
 use Hubleto\App\Community\Customers\Models\RecordManagers\Customer;
 use Hubleto\App\External\WaiBlue\HlthcrCore\Models\RecordManagers\Traits\OffersActiveRecords;
 use Hubleto\App\External\WaiBlue\HlthcrBranches\Services\BranchScope;
+use Hubleto\App\External\WaiBlue\HlthcrCore\Services\Roles;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -88,6 +89,23 @@ class Branch extends \Hubleto\Erp\RecordManager
   public function restrictToOfferedRecords(mixed $query): mixed
   {
     return $this->restrictToActiveOrChosen($query, 'id_branch');
+  }
+
+  // Only nurses read the nurse notes; others get NULL, so the list search cannot find branches by the notes either.
+  public function prepareSelectsForReadQuery(mixed $query = null, int $level = 0, array|null $includeRelations = null): array
+  {
+    $selects = parent::prepareSelectsForReadQuery($query, $level, $includeRelations);
+
+    $hubleto = \Hubleto\Erp\Loader::getGlobalApp();
+    /** @var Roles */
+    $roles = $hubleto->getService(Roles::class);
+    if ($roles->activeUserHasRole(Roles::NURSE)) return $selects;
+
+    $nurseNotesSelect = $this->table . '.nurse_notes';
+    foreach ($selects as $index => $select) {
+      if ($select == $nurseNotesSelect) $selects[$index] = 'NULL as nurse_notes';
+    }
+    return $selects;
   }
 
   private function restrictToVisibleBranches(mixed $query): mixed

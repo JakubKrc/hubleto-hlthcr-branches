@@ -10,10 +10,12 @@
         <span class="icon"><i class="fas fa-tags"></i></span>
         <span class="text">{{ translate('Branch types') }}</span>
       </a>
-      <a href="{{ config.projectUrl }}/workflow/workflows" class="btn btn-transparent">
-        <span class="icon"><i class="fas fa-timeline"></i></span>
-        <span class="text">{{ translate('Deficiency states') }}</span>
-      </a>
+      {% if viewParams.mayEditWorkflows %}
+        <a href="{{ config.projectUrl }}/workflow/workflows" class="btn btn-transparent">
+          <span class="icon"><i class="fas fa-timeline"></i></span>
+          <span class="text">{{ translate('Deficiency states') }}</span>
+        </a>
+      {% endif %}
     </div>
   </div>
 </div>
