@@ -67,6 +67,12 @@ class Deficiency extends \Hubleto\App\External\WaiBlue\HlthcrCore\Models\HlthcrM
     return 1;
   }
 
+  public function onBeforeCreate(array $record): array
+  {
+    $record = parent::onBeforeCreate($record);
+    return $this->dropSentWorkflow($record);
+  }
+
   public function onBeforeUpdate(array $record): array
   {
     $record = parent::onBeforeUpdate($record);

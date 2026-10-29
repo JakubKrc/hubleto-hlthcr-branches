@@ -68,7 +68,7 @@ class Job extends \Hubleto\App\External\WaiBlue\HlthcrCore\Models\HlthcrModel
   {
     $record = parent::onBeforeUpdate($record);
     $record = $this->keepStoredValues($record, ['id_branch']);
-    $record = $this->addStoredValuesOfMissingColumns($record, ['name']);
+    $record = $this->addStoredValuesOfMissingColumns($record, ['name', 'exam_interval_months']);
     $this->refuseInvalidJob($record);
     return $record;
   }

@@ -131,6 +131,8 @@ class Branch extends \Hubleto\App\External\WaiBlue\HlthcrCore\Models\HlthcrModel
     $record = $this->emptyDatesAsNull($record);
     // The client stays as created (one legacy app), so the branch's documents and history stay with it.
     $record = $this->keepStoredValues($record, ['id_customer']);
+    // A save that leaves out a yes/no or number column would store 0 for it (Hubleto), so the stored value is used.
+    $record = $this->addStoredValuesOfMissingColumns($record, ['is_active', 'has_valid_first_aid_training']);
 
     // Nurse notes are for nurses only (both legacy apps); others do not get them, so they must not overwrite them.
     if (!$this->activeUserIsNurse()) unset($record['nurse_notes']);

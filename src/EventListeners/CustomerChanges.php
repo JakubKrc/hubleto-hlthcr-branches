@@ -42,7 +42,7 @@ class CustomerChanges extends \Hubleto\Framework\EventListener implements \Huble
     $idCustomer = (int) $savedRecord['id'];
 
     $wasActive = (bool) ($originalRecord['is_active'] ?? true);
-    $isActive = (bool) ($savedRecord['is_active'] ?? true);
+    $isActive = (bool) ($savedRecord['is_active'] ?? $wasActive);
     $customerWasDeactivated = $wasActive && !$isActive;
     if ($customerWasDeactivated) {
       $mBranch->record->where('id_customer', $idCustomer)->update(['is_active' => 0]);
