@@ -146,12 +146,18 @@ class Loader extends \Hubleto\App\External\WaiBlue\HlthcrCore\HlthcrApp
 
   public function renderSecondSidebar(): string
   {
+    // Medical staff do not see deficiencies (both legacy apps).
+    $deficienciesButton = '';
+    if ($this->getService(\Hubleto\App\External\WaiBlue\HlthcrCore\Services\AccessScope::class)->activeUserSeesWorkRecords()) {
+      $deficienciesButton = $this->secondSidebarButton('hlthcr-branches/deficiencies', 'fas fa-circle-exclamation', $this->translate('Deficiencies'));
+    }
+
     return '
       ' . $this->secondSidebarTitle() . '
       <div class="app-sidebar-buttons">
         ' . $this->secondSidebarButton('hlthcr-branches/branches', 'fas fa-industry', $this->translate('Branches')) . '
         ' . $this->secondSidebarButton('hlthcr-branches/jobs', 'fas fa-helmet-safety', $this->translate('Job positions')) . '
-        ' . $this->secondSidebarButton('hlthcr-branches/deficiencies', 'fas fa-circle-exclamation', $this->translate('Deficiencies')) . '
+        ' . $deficienciesButton . '
         ' . $this->secondSidebarButton('hlthcr-branches/branch-types', 'fas fa-tags', $this->translate('Branch types')) . '
         ' . $this->secondSidebarButton('hlthcr-branches/settings', 'fas fa-cog', $this->translate('Settings')) . '
       </div>

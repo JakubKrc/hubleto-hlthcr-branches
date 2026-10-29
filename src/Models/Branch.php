@@ -89,7 +89,8 @@ class Branch extends \Hubleto\App\External\WaiBlue\HlthcrCore\Models\HlthcrModel
   {
     $description = parent::describeForm();
     $description->defaultValues['is_active'] = true;
-    $description->ui['showNurseNotes'] = $this->activeUserIsNurse();
+    // Only nurses get the nurse notes input (Hubleto sends only its own ui keys to the form, but all inputs).
+    if (!$this->activeUserIsNurse()) unset($description->inputs['nurse_notes']);
     return $description;
   }
 

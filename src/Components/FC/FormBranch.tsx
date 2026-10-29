@@ -16,7 +16,7 @@ const T = new Translator(parentApp + '/Loader', 'Components/' + componentName);
 // The client stays as created (the server keeps it), so it is read-only after saving.
 const TabDefault = () => {
   const form = React.useContext(FormMetaContext);
-  const showNurseNotes = Boolean(form.description?.ui?.showNurseNotes);
+  const showNurseNotes = Boolean(form.description?.inputs?.nurse_notes);
   const isSaved = form.id > 0;
   return <div className='grid grid-cols-1 md:grid-cols-2 gap-2'>
   <div>
