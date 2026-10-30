@@ -11,12 +11,19 @@ class Workflow extends \Hubleto\App\Community\Workflow\Workflow
   {
     /** @var Models\Deficiency */
     $mDeficiency = $this->getModel(Models\Deficiency::class);
-    $deficiencies = $mDeficiency->record->prepareReadQuery()
+    $query = $mDeficiency->record->prepareReadQuery()
       ->where('hlthcr_deficiencies.id_workflow', $idWorkflow)
       ->with(['BRANCH'])
-      ->get()
-      ->toArray()
     ;
+
+    // The board's user buttons: deficiencies of the branches of that hygienist.
+    $idOwner = (int) ($filters['fOwner'] ?? 0);
+    if ($idOwner > 0) {
+      $branchIdsOfOwner = $this->getModel(Models\Branch::class)->record->where('id_owner', $idOwner)->pluck('id');
+      $query = $query->whereIn('hlthcr_deficiencies.id_branch', $branchIdsOfOwner);
+    }
+
+    $deficiencies = $query->get()->toArray();
 
     $items = [];
     foreach ($deficiencies as $deficiency) {

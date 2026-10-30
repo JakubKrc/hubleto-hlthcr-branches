@@ -15,6 +15,7 @@ class Loader extends \Hubleto\App\External\WaiBlue\HlthcrCore\HlthcrApp
   const DEFICIENCY_STEP_NEW = 'hlthcr-deficiency-new';
   const DEFICIENCY_STEP_IN_PROGRESS = 'hlthcr-deficiency-in-progress';
   const DEFICIENCY_STEP_RESOLVED = 'hlthcr-deficiency-resolved';
+  const DEFICIENCY_STEP_NOT_FULFILLED = 'hlthcr-deficiency-not-fulfilled';
 
   public function init(): void
   {
@@ -70,38 +71,50 @@ class Loader extends \Hubleto\App\External\WaiBlue\HlthcrCore\HlthcrApp
     }
   }
 
-  private function installDeficiencyWorkflow(): void
+  /**
+   * Creates the deficiency workflow, or adds the steps an older install does not have yet.
+   * The first step is the default for new deficiencies.
+   */
+  // Public for the migration Deficiency_0004: "php hubleto migrate" does not run installApp().
+  public function installDeficiencyWorkflow(): void
   {
     /** @var WorkflowModel */
     $mWorkflow = $this->getModel(WorkflowModel::class);
     /** @var WorkflowStep */
     $mWorkflowStep = $this->getModel(WorkflowStep::class);
 
-    $workflowExists = $mWorkflow->record->where('group', Models\Deficiency::WORKFLOW_GROUP)->exists();
-    if ($workflowExists) return;
+    $workflow = $mWorkflow->record->where('group', Models\Deficiency::WORKFLOW_GROUP)->first();
+    if ($workflow) {
+      $idWorkflow = (int) $workflow->id;
+    } else {
+      $idWorkflow = (int) $mWorkflow->record->recordCreate([
+        'name' => $this->translate('Deficiencies'),
+        'show_in_kanban' => 1,
+        'order' => 50,
+        'group' => Models\Deficiency::WORKFLOW_GROUP,
+      ])['id'];
+    }
 
-    $idWorkflow = $mWorkflow->record->recordCreate([
-      'name' => $this->translate('Deficiencies'),
-      'show_in_kanban' => 1,
-      'order' => 50,
-      'group' => Models\Deficiency::WORKFLOW_GROUP,
-    ])['id'];
-
-    // The first step is the default for new deficiencies.
     $steps = [
       ['name' => $this->translate('Newly found'), 'color' => '#d33115', 'tag' => self::DEFICIENCY_STEP_NEW],
       ['name' => $this->translate('Being resolved'), 'color' => '#e27300', 'tag' => self::DEFICIENCY_STEP_IN_PROGRESS],
       ['name' => $this->translate('Resolved'), 'color' => '#4caf50', 'tag' => self::DEFICIENCY_STEP_RESOLVED],
+      ['name' => $this->translate('Not fulfilled'), 'color' => '#5f5f5f', 'tag' => self::DEFICIENCY_STEP_NOT_FULFILLED],
     ];
     $order = 1;
     foreach ($steps as $step) {
-      $mWorkflowStep->record->recordCreate([
-        'id_workflow' => $idWorkflow,
-        'name' => $step['name'],
-        'color' => $step['color'],
-        'tag' => $step['tag'],
-        'order' => $order,
-      ]);
+      $existingStep = $mWorkflowStep->record->where('id_workflow', $idWorkflow)->where('tag', $step['tag'])->first();
+      if ($existingStep) {
+        $existingStep->update(['order' => $order]);
+      } else {
+        $mWorkflowStep->record->recordCreate([
+          'id_workflow' => $idWorkflow,
+          'name' => $step['name'],
+          'color' => $step['color'],
+          'tag' => $step['tag'],
+          'order' => $order,
+        ]);
+      }
       $order++;
     }
   }
